@@ -11,3 +11,7 @@ keywords = ["urbit", "monitor", "health check"]
 [dependencies]
 urbit-http-api    = "0.7.3"
 exitcode = "1.1.2"
+system-config = "0.1.2"
+serde = "1.0"
+serde_yaml = "0.8"
+yaml-rust = "0.4.4"

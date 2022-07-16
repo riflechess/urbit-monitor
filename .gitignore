@@ -1,3 +1,4 @@
 # Build and Release Folders
 target/
-config.txt
+config.yml
+config2.yml

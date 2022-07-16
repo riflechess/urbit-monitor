@@ -67,14 +67,43 @@ fn main() {
 
       //assert!(configs_yaml["endpoints"][0].as_str().unwrap());
       //println!("{}", configs_yaml);
-      let docs = YamlLoader::load_from_str(&monitor_configs).unwrap();
-      let doc = &docs[0];
-      println!("{:?}", doc);
-      //assert_eq!(doc["text-alerting"][0].as_str().unwrap(), "enabled");
-      println!("{:?}", doc["testkey"][0].as_str().unwrap());
-      println!("{:?}", doc["text-alerting"]["enabled"].as_str().unwrap());
-      //assert_eq!(doc["enabled"][0].as_bool().unwrap(), false);
-      //assert_eq!(doc["admin"][0].as_str().unwrap());
+      let cfgs = YamlLoader::load_from_str(&monitor_configs).unwrap();
+      let cfg = &cfgs[0];
+      println!("{:?}", cfg);
+      //assert_eq!(cfg["text-alerting"][0].as_str().unwrap(), "enabled");
+      //println!("{:?}", cfg["testkey"][0].as_str().unwrap());
+      // text-alerting vars 
+      println!("{:?}", cfg["text-alerting"]["enabled"].as_bool().unwrap());
+      let do_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
+      let alerting_endpoint = cfg["text-alerting"]["endpoint"].as_str().unwrap();
+      let alerting_token = cfg["text-alerting"]["token"].as_str().unwrap();
+      println!("Alerting vars - enabled:{}, endpoint:{}, token:{}", do_alerting, alerting_endpoint, alerting_token);
+      //assert_eq!(cfg["enabled"][0].as_bool().unwrap(), false);
+      //assert_eq!(cfg["admin"][0].as_str().unwrap());
+
+      let planets = cfg["endpoints"].as_hash().unwrap();
+      for planet in planets {
+        println!("Checking {:?}.",planet.0.as_str().unwrap()); 
+        let planet_address = cfg["endpoints"][planet.0.as_str().unwrap()]["address"].as_str().unwrap();
+        let planet_code = cfg["endpoints"][planet.0.as_str().unwrap()]["code"].as_str().unwrap();
+        println!("  Planet address: {}",planet_address);
+        println!("  Planet code: {}",planet_code);        
+      }
+      //println!("zzzz:{}",xxx);
+      //println!("{:?}", xxx);
+      //for planet in cfg["endpoints"].as_vec().unwrap() {
+      //  println!("hi");
+      //}
+      // planet vars
+      //println!("check:{}",cfg["endpoints"]["planet1"].contains_key());
+
+      //let planet_name = cfg["endpoints"]["planet1"]["name"].as_str().unwrap();
+      //let planet_address = cfg["endpoints"]["planet1"]["address"].as_str().unwrap();
+      //let planet_code = cfg["endpoints"]["planet1"]["code"].as_str().unwrap();      
+      //println!("Planet vars - name:{}, address:{}", planet_name, planet_address);
+            
+
+      
     }else{
       err("ERROR: Config file not found.");
     }

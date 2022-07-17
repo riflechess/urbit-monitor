@@ -7,6 +7,7 @@ extern crate exitcode;
 extern crate system_config;
 extern crate yaml_rust;
 
+
 use std::env;
 use std::path::Path;
 use serde::{Deserialize, Deserializer};
@@ -19,9 +20,9 @@ use std::fs::File;
 use yaml_rust::{YamlLoader, YamlEmitter};
 use urbit_http_api::ShipInterface;
 use std::{thread, time::Duration};
+use chrono::{Local, DateTime, TimeZone};
 
-//use system-config::new;
-//use serde_yaml;
+
 
 
 fn usage(){
@@ -36,14 +37,18 @@ fn err(errtxt: &str){
   std::process::exit(exitcode::DATAERR);
 }
 
+fn ts() -> std::string::String{
+  return Local::now().format("%Y-%m-%dT%H:%M:%S").to_string();
+}
+
 fn main() {
   let args: Vec<String> = env::args().collect();
-  let config_file = &args[1];
-  println!("Staring urbitmon...");
-
+  println!("{} - Staring urbitmon...", ts());
+  
   if args.len() != 2 {
-      usage();
+    usage();
   }else{
+    let config_file = &args[1];
     if Path::new(config_file).exists(){
       // open and read config.yml
       let mut file = File::open(config_file).expect("Unable to open config.");
@@ -59,29 +64,36 @@ fn main() {
       let monitoring_interval = cfg["monitoring"]["interval"].as_i64().unwrap();
       let service_mode: bool = monitoring_interval != 0;
 
+      // set logging vars 
+      if cfg["logging"]["enabled"].as_bool().unwrap() {
+        let do_logging = cfg["logging"]["enabled"].as_bool().unwrap();
+        let logfile = cfg["logging"]["logfile"].as_str().expect("Logfile not defined");
+      } 
+
       // set text-alerting vars 
       if cfg["text-alerting"]["enabled"].as_bool().unwrap() {
         let do_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
         let alerting_endpoint = cfg["text-alerting"]["endpoint"].as_str().expect("Alerting endpoint not defined");
         let alerting_token = cfg["text-alerting"]["token"].as_str().expect("Alerting token not defined");
-        println!("Alerting vars - enabled:{}, endpoint:{}, token:{}", do_alerting, alerting_endpoint, alerting_token);  
+        println!("{} - Alerting vars - enabled:{}, endpoint:{}, token:{}", ts(), do_alerting, alerting_endpoint, alerting_token);  
       }
 
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
+
         for planet in planets {
           let planet_name = planet.0.as_str().unwrap();
           let planet_address = cfg["endpoints"][planet.0.as_str().unwrap()]["address"].as_str().unwrap();
           let planet_code = cfg["endpoints"][planet.0.as_str().unwrap()]["code"].as_str().unwrap();
-          println!("Checking: {}, address: {}", planet_name, planet_address);
+          println!("{} - Checking: {}, address: {}", ts(), planet_name, planet_address);
           
           // simple login check - don't unwrap 
           let ship_interface = ShipInterface::new(planet_address, planet_code);
           
           if ship_interface.is_ok() {
-            println!("  Login status: {}", ship_interface.is_ok());
+            println!("{} - {} [OK]", ts(), planet_name);
           } else {
-            println!("  Login status: {}", ship_interface.is_ok());
+            println!("{} - {} [ERROR] Login failed - Alerting.", ts(), planet_name);
             // call alert here 
           }
         }
@@ -90,7 +102,7 @@ fn main() {
           let seconds: u64 = monitoring_interval.try_into().unwrap();
           thread::sleep(Duration::from_secs(monitoring_interval.try_into().unwrap()));          
         }else{
-          println!("Exiting urbitmon...");
+          println!("{} - Exiting urbitmon...", ts());
           break;
         }
       }

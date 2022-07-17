@@ -3,3 +3,4 @@ target/
 config.yml
 config2.yml
 Cargo.lock
+urbitmon.log

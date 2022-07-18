@@ -12,7 +12,6 @@ use std::env;
 use std::path::Path;
 use serde::{Deserialize, Deserializer};
 use serde::de::{self, Visitor, MapAccess};
-use std::fs;
 use std::net::SocketAddr;
 use std::error::Error;
 use std::io::prelude::*;
@@ -23,7 +22,7 @@ use std::{thread, time::Duration};
 use chrono::{Local, DateTime, TimeZone};
 
 
-
+mod alerts;
 
 fn usage(){
   println!("USAGE: urbitmon [yaml config file]");
@@ -37,7 +36,8 @@ fn err(errtxt: &str){
   std::process::exit(exitcode::DATAERR);
 }
 
-fn ts() -> std::string::String{
+// timestamp for logging
+pub fn ts() -> std::string::String{
   return Local::now().format("%Y-%m-%dT%H:%M:%S").to_string();
 }
 
@@ -71,12 +71,20 @@ fn main() {
       } 
 
       // set text-alerting vars 
+
+
+      let do_text_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
+      let alerting_config = cfg["text-alerting"].as_str().unwrap();
       if cfg["text-alerting"]["enabled"].as_bool().unwrap() {
-        let do_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
-        let alerting_endpoint = cfg["text-alerting"]["endpoint"].as_str().expect("Alerting endpoint not defined");
-        let alerting_token = cfg["text-alerting"]["token"].as_str().expect("Alerting token not defined");
-        println!("{} - Alerting vars - enabled:{}, endpoint:{}, token:{}", ts(), do_alerting, alerting_endpoint, alerting_token);  
-      }
+        //let alerting_config = cfg["text-alerting"].as_hash().unwrap();
+        
+        
+        // move these to alerts.rs 
+        //let do_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
+        //let alerting_endpoint = cfg["text-alerting"]["endpoint"].as_str().expect("Alerting endpoint not defined");
+        //let alerting_token = cfg["text-alerting"]["token"].as_str().expect("Alerting token not defined");
+        //println!("{} - Alerting vars - enabled:{}, endpoint:{}, token:{}", ts(), do_alerting, alerting_endpoint, alerting_token);  
+      } 
 
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
@@ -85,7 +93,7 @@ fn main() {
           let planet_name = planet.0.as_str().unwrap();
           let planet_address = cfg["endpoints"][planet.0.as_str().unwrap()]["address"].as_str().unwrap();
           let planet_code = cfg["endpoints"][planet.0.as_str().unwrap()]["code"].as_str().unwrap();
-          println!("{} - Checking: {}, address: {}", ts(), planet_name, planet_address);
+          println!("{} - Checking: {} ({})", ts(), planet_name, planet_address);
           
           // simple login check - don't unwrap 
           let ship_interface = ShipInterface::new(planet_address, planet_code);
@@ -94,6 +102,7 @@ fn main() {
             println!("{} - {} [OK]", ts(), planet_name);
           } else {
             println!("{} - {} [ERROR] Login failed - Alerting.", ts(), planet_name);
+            if do_text_alerting {alerts::text_alert(alerting_config)};
             // call alert here 
           }
         }

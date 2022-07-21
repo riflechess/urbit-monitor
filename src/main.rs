@@ -20,9 +20,11 @@ use yaml_rust::{YamlLoader, YamlEmitter};
 use urbit_http_api::ShipInterface;
 use std::{thread, time::Duration};
 use chrono::{Local, DateTime, TimeZone};
-
+use utils::ts;
+use alerts::alerting_receiver;
 
 mod alerts;
+mod utils;
 
 fn usage(){
   println!("USAGE: urbitmon [yaml config file]");
@@ -34,11 +36,6 @@ fn usage(){
 fn err(errtxt: &str){
   println!("{} error has occurred.  Exiting.", errtxt);
   std::process::exit(exitcode::DATAERR);
-}
-
-// timestamp for logging
-pub fn ts() -> std::string::String{
-  return Local::now().format("%Y-%m-%dT%H:%M:%S").to_string();
 }
 
 fn main() {
@@ -63,7 +60,15 @@ fn main() {
       // set monitoring vars 
       let monitoring_interval = cfg["monitoring"]["interval"].as_i64().unwrap();
       let service_mode: bool = monitoring_interval != 0;
-
+      
+      // text alerting vars
+      //let text_alerting_config = cfg["text_alerting"].as_hash().expect("Text-alerting variables not defined");
+      //let text_alerting_config = cfg["text_alerting"].as_vec().expect("Text-alerting variables not defined");
+      
+      let text_alerting_config = &cfg["text_alerting"];
+      //println!("text_alerting_config {:?}", text_alerting_config);
+      let do_text_alerting = cfg["text_alerting"]["enabled"].as_bool().unwrap();
+ 
       // set logging vars 
       if cfg["logging"]["enabled"].as_bool().unwrap() {
         let do_logging = cfg["logging"]["enabled"].as_bool().unwrap();
@@ -73,9 +78,9 @@ fn main() {
       // set text-alerting vars 
 
 
-      let do_text_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
-      let alerting_config = cfg["text-alerting"].as_str().unwrap();
-      if cfg["text-alerting"]["enabled"].as_bool().unwrap() {
+      //let do_text_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
+      //let alerting_config = cfg["text-alerting"].as_str().unwrap();
+      //if cfg["text-alerting"]["enabled"].as_bool().unwrap() {
         //let alerting_config = cfg["text-alerting"].as_hash().unwrap();
         
         
@@ -84,7 +89,7 @@ fn main() {
         //let alerting_endpoint = cfg["text-alerting"]["endpoint"].as_str().expect("Alerting endpoint not defined");
         //let alerting_token = cfg["text-alerting"]["token"].as_str().expect("Alerting token not defined");
         //println!("{} - Alerting vars - enabled:{}, endpoint:{}, token:{}", ts(), do_alerting, alerting_endpoint, alerting_token);  
-      } 
+      //} 
 
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
@@ -101,9 +106,13 @@ fn main() {
           if ship_interface.is_ok() {
             println!("{} - {} [OK]", ts(), planet_name);
           } else {
-            println!("{} - {} [ERROR] Login failed - Alerting.", ts(), planet_name);
-            if do_text_alerting {alerts::text_alert(alerting_config)};
-            // call alert here 
+            println!("{} - {} [ERROR] Login failed.", ts(), planet_name);
+            //if do_text_alerting {alerts::text_alert(text_alerting_config)};
+            if do_text_alerting {
+              alerting_receiver(planet_name, "text_alert", text_alerting_config);
+            }
+
+            
           }
         }
         // wait if in service mode, exit if not
@@ -115,12 +124,8 @@ fn main() {
           break;
         }
       }
-
-
-
     }else{
       err("ERROR: Config file not found.");
     }
   }
-
 }

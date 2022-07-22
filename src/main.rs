@@ -20,7 +20,7 @@ use yaml_rust::{YamlLoader, YamlEmitter};
 use urbit_http_api::ShipInterface;
 use std::{thread, time::Duration};
 use chrono::{Local, DateTime, TimeZone};
-use utils::ts;
+use utils::{ts, add_planet_alert};
 use alerts::alerting_receiver;
 
 mod alerts;
@@ -52,7 +52,6 @@ fn main() {
       let mut monitor_configs = String::new();
       file.read_to_string(&mut monitor_configs).expect("Unable to read the file");
       
-
       // parse yaml config file
       let cfgs = YamlLoader::load_from_str(&monitor_configs).unwrap();
       let cfg = &cfgs[0];
@@ -60,36 +59,14 @@ fn main() {
       // set monitoring vars 
       let monitoring_interval = cfg["monitoring"]["interval"].as_i64().unwrap();
       let service_mode: bool = monitoring_interval != 0;
-      
+      let alert_snooze = cfg["monitoring"]["interval_snooze"].as_i64();
+      let mut alerting: bool = false;
+      let mut alerting_planets = String::new();
+
       // text alerting vars
-      //let text_alerting_config = cfg["text_alerting"].as_hash().expect("Text-alerting variables not defined");
-      //let text_alerting_config = cfg["text_alerting"].as_vec().expect("Text-alerting variables not defined");
-      
       let text_alerting_config = &cfg["text_alerting"];
-      //println!("text_alerting_config {:?}", text_alerting_config);
       let do_text_alerting = cfg["text_alerting"]["enabled"].as_bool().unwrap();
  
-      // set logging vars 
-      if cfg["logging"]["enabled"].as_bool().unwrap() {
-        let do_logging = cfg["logging"]["enabled"].as_bool().unwrap();
-        let logfile = cfg["logging"]["logfile"].as_str().expect("Logfile not defined");
-      } 
-
-      // set text-alerting vars 
-
-
-      //let do_text_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
-      //let alerting_config = cfg["text-alerting"].as_str().unwrap();
-      //if cfg["text-alerting"]["enabled"].as_bool().unwrap() {
-        //let alerting_config = cfg["text-alerting"].as_hash().unwrap();
-        
-        
-        // move these to alerts.rs 
-        //let do_alerting = cfg["text-alerting"]["enabled"].as_bool().unwrap();
-        //let alerting_endpoint = cfg["text-alerting"]["endpoint"].as_str().expect("Alerting endpoint not defined");
-        //let alerting_token = cfg["text-alerting"]["token"].as_str().expect("Alerting token not defined");
-        //println!("{} - Alerting vars - enabled:{}, endpoint:{}, token:{}", ts(), do_alerting, alerting_endpoint, alerting_token);  
-      //} 
 
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
@@ -107,14 +84,21 @@ fn main() {
             println!("{} - {} [OK]", ts(), planet_name);
           } else {
             println!("{} - {} [ERROR] Login failed.", ts(), planet_name);
-            //if do_text_alerting {alerts::text_alert(text_alerting_config)};
-            if do_text_alerting {
-              alerting_receiver(planet_name, "text_alert", text_alerting_config);
-            }
-
-            
+            alerting = true;
+            add_planet_alert(&mut alerting_planets, planet_name);
           }
         }
+        // need to add the snooze functionality here && counter = snooze
+        if do_text_alerting && alerting {
+          // if service mode && counter = snooze
+          alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+          alerting = false;
+        }
+
+        // maybe keep snooze value immutable and add a counter going up
+        // if counter = snooze, counter = 0
+
+
         // wait if in service mode, exit if not
         if service_mode {
           let seconds: u64 = monitoring_interval.try_into().unwrap();

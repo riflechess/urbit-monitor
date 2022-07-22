@@ -1,11 +1,10 @@
 use std::io::{stdout, Write, Read};
-//use curl::easy::Easy;
 use linked_hash_map::LinkedHashMap;
 use yaml_rust::{YamlLoader, YamlEmitter, Yaml};
 use super::utils::ts;
 use ureq::{post, Request};
 
-// receiver function to route alerts
+// receiver function to route alerts (when additional alerting added)
 pub fn alerting_receiver(planets: &str, alert_type: &str, config_yaml: &Yaml) {
   println!("{} - Alert triggered - planets: {} type: {}", ts(), planets, alert_type);
   match alert_type {
@@ -34,10 +33,6 @@ fn text_alert(planets: &str, config_yaml: &Yaml){
   if alert_status.is_ok() {
     println!("{} - Alert sent [OK]", ts());
   }else{
-    println!("{} - Alert failed to send [ERR]", ts());
+    println!("{} - Alert failed to send [ERROR]", ts());
   }
-
-
-
-    
 }

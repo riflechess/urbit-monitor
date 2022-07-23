@@ -6,6 +6,7 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
   - Uses the [urbit rust API](https://github.com/robkorn/rust-urbit-http-api) developed by [dcspark](https://www.dcspark.io/) to test via ship login
 
 ## Build instructions (*nix)
+  - Prerequistes: _git_
   - Install rust
     ```shell
     curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
@@ -20,7 +21,7 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
     ```
 ## Config file
   - `monitoring`
-    - `interval` - Check ships every X seconds.
+    - `interval` - Check ships every X seconds. If set to `0`, urbitmon will run once and ignore `alert_snooze`.
     - `alert_snooze` - After alert, don't send alerts for X cycles.
     - _example: interval: 300, alert_snooze: 6, will check status of planets every five minutes and upon alerting, halt futher alerts for 30 min.
   - `endpoints`
@@ -29,4 +30,5 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
     - `code` login `+code`
 
 ## Further development
-  - Add support for alerting via urbit group
+  - Add support for alerting via urbit group message.
+

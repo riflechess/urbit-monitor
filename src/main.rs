@@ -66,8 +66,6 @@ fn main() {
 
       // text alerting vars
       let text_alerting_config = &cfg["text_alerting"];
-      let do_text_alerting = cfg["text_alerting"]["enabled"].as_bool().unwrap();
- 
 
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
@@ -92,7 +90,7 @@ fn main() {
           }
         }
         // need to add the snooze functionality here && counter = snooze
-        if do_text_alerting && alerting {
+        if alerting {
           // if service mode && counter = snooze
           if !service_mode {
             alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
@@ -105,8 +103,8 @@ fn main() {
               alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
               alert_snooze_ct = alert_snooze_ct - 1;
             // snooze ends, send alert, reset snooze
-            }else if alert_snooze_ct == 0{
-              println!("{} - Snooze ended, resending alert.", ts());
+            }else if alert_snooze_ct == 1{
+              println!("{} - Snooze ended, enabling alerts.", ts());
               // alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
               alert_snooze_ct = alert_snooze;
             // snooze zone, don't alert, decrement snooze count

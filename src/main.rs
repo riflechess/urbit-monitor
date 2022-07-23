@@ -15,9 +15,12 @@ use alerts::alerting_receiver;
 mod alerts;
 mod utils;
 
+static VERSION: &str = "0.0.1";
+
 fn usage(){
   println!("USAGE: urbitmon [yaml config file]");
   println!("       e.g. urbitmon config.yaml");
+  println!("urbitmon: {}", VERSION);
   std::process::exit(exitcode::OK);    
 }
 

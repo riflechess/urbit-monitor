@@ -7,7 +7,7 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
 
 ## Build instructions (*nix)
   - Prerequistes: _git_
-  - Install rust
+  - Install Rust (ensure the arch matches your target)
     ```shell
     curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
     ```
@@ -19,6 +19,23 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
     ```shell
     rustc --version
     ```
+  - Clone git repo
+    ```shell
+    git clone git@github.com:riflechess/urbit-monitor.git
+    cd urbit-monitor
+    ```
+  - Build release binary
+    ```shell
+    cargo build --release
+    ```
+  - Validate build
+    ```shell
+    ./target/release/urbit-monitor                                                                                  /tmp/urbit-monitor:17:55
+2022-07-23T17:55:55 - Staring urbitmon...
+USAGE: urbitmon [yaml config file]
+       e.g. urbitmon config.yaml
+
+
 ## Config file
   - `monitoring`
     - `interval` - Check ships every X seconds. If set to `0`, urbitmon will run once and ignore `alert_snooze`.
@@ -31,4 +48,5 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
 
 ## Further development
   - Add support for alerting via urbit group message.
+  - Use `alerting_receiver` to add support for other alerting methods.
 

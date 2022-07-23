@@ -1,0 +1,25 @@
+monitoring:
+  interval: 60             # seconds to sleep between runs, use 0 for single run/cron mode
+  alert_snooze: 3          # number of intervals to sleep before ressending alert 
+                         
+# alerting using textbelt
+text_alerting:
+  endpoint: https://textbelt.com/text             # this shouldn't change just get an API key: https://textbelt.com/
+  phone_number: 5555555555
+  token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  alert_text: "fix your stinking planets: "
+
+# planet/star/galaxy endpoints to monitor
+endpoints:
+  zod: 
+    address: http://127.0.0.1:8080/
+    code: lidlut-lidlut-lidlut-lidlut
+  walbex-hasper-pollyt-hocnyx--macben-padper-lagdeb-marzod: 
+    address: https://my.palnet.net/
+    code: palnet-palnet-palnet-palnet
+  palnet-palnet: 
+    address: yyyyy.net
+    code: ponbes-ponbes-ponbes-ponbes
+  masnut-masnut: 
+    address: yyyyy.net
+    code: masnut-masnut-masnut-masnut

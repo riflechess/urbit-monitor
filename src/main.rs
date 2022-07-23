@@ -20,7 +20,7 @@ static VERSION: &str = "0.0.1";
 fn usage(){
   println!("USAGE: urbitmon [yaml config file]");
   println!("       e.g. urbitmon config.yaml");
-  println!("urbitmon: {}", VERSION);
+  println!("       urbitmon: {}", VERSION);
   std::process::exit(exitcode::OK);    
 }
 
@@ -31,11 +31,11 @@ fn err(errtxt: &str){
 
 fn main() {
   let args: Vec<String> = env::args().collect();
-  println!("{} - Staring urbitmon...", ts());
   
   if args.len() != 2 {
     usage();
   }else{
+    println!("{} - Staring urbitmon...", ts());
     let config_file = &args[1];
     if Path::new(config_file).exists(){
       // open and read config.yml

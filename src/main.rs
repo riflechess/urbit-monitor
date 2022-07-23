@@ -59,7 +59,8 @@ fn main() {
       // set monitoring vars 
       let monitoring_interval = cfg["monitoring"]["interval"].as_i64().unwrap();
       let service_mode: bool = monitoring_interval != 0;
-      let alert_snooze = cfg["monitoring"]["interval_snooze"].as_i64();
+      let alert_snooze = cfg["monitoring"]["alert_snooze"].as_i64().unwrap();
+      let mut alert_snooze_ct = alert_snooze;
       let mut alerting: bool = false;
       let mut alerting_planets = String::new();
 
@@ -70,6 +71,8 @@ fn main() {
 
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
+        // reset alerting planets 
+        alerting_planets.clear();
 
         for planet in planets {
           let planet_name = planet.0.as_str().unwrap();
@@ -91,21 +94,31 @@ fn main() {
         // need to add the snooze functionality here && counter = snooze
         if do_text_alerting && alerting {
           // if service mode && counter = snooze
-          alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
-          alerting = false;
-        }
-
-        // maybe keep snooze value immutable and add a counter going up
-        // if counter = snooze, counter = 0
-
-
-        // wait if in service mode, exit if not
-        if service_mode {
-          let seconds: u64 = monitoring_interval.try_into().unwrap();
-          thread::sleep(Duration::from_secs(monitoring_interval.try_into().unwrap()));          
-        }else{
-          println!("{} - Exiting urbitmon...", ts());
-          break;
+          if !service_mode {
+            alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+            println!("{} - Exiting urbitmon...", ts());
+            break;
+          }else{
+            // service mode alerting with snooze
+            // first alert send decrement snooze count
+            if alert_snooze_ct == alert_snooze {
+              alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+              alert_snooze_ct = alert_snooze_ct - 1;
+            // snooze ends, send alert, reset snooze
+            }else if alert_snooze_ct == 0{
+              println!("{} - Snooze ended, resending alert.", ts());
+              // alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+              alert_snooze_ct = alert_snooze;
+            // snooze zone, don't alert, decrement snooze count
+            }else{
+              println!("{} - Snoozing alerts.", ts());
+              alert_snooze_ct = alert_snooze_ct - 1;       
+            }
+            // sleep for monitoring interval, reset alert
+            alerting = false;
+            let seconds: u64 = monitoring_interval.try_into().unwrap();
+            thread::sleep(Duration::from_secs(monitoring_interval.try_into().unwrap()));            
+          }
         }
       }
     }else{

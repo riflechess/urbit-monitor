@@ -10,3 +10,5 @@ pub fn add_planet_alert(alerting_planets: &mut String, new_planet: &str){
   alerting_planets.push_str(new_planet);
   alerting_planets.push_str(" ");
 }
+
+

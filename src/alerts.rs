@@ -20,13 +20,18 @@ fn text_alert(planets: &str, config_yaml: &Yaml){
   let alerting_token = config_yaml["token"].as_str().expect("Alerting token not defined");
   let phone_number = config_yaml["phone_number"].as_i64().expect("Alerting phone_number not defined");
   let alert_text = config_yaml["alert_text"].as_str().expect("Alerting alert_text not defined");
+
+  let message_pre: String = alert_text.to_string();
+  let message_post = message_pre + planets;
+
   println!("{} - {} {} {}{}", ts(), alerting_endpoint, phone_number, alert_text, planets);
+  
 
   let agent = ureq::Agent::new();
   let alert_status = agent.post(alerting_endpoint)
   .send_json(ureq::json!({
     "phone" : phone_number,
-    "message" : alert_text,
+    "message" : message_post,
     "key" : alerting_token
   }));
   

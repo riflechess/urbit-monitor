@@ -1,25 +1,14 @@
-#![allow(dead_code)]
-#![allow(unused_variables)]
-#![allow(non_camel_case_types)]
-#![allow(unused_imports)]
-
 extern crate exitcode;
 extern crate system_config;
 extern crate yaml_rust;
 
-
 use std::env;
 use std::path::Path;
-use serde::{Deserialize, Deserializer};
-use serde::de::{self, Visitor, MapAccess};
-use std::net::SocketAddr;
-use std::error::Error;
 use std::io::prelude::*;
 use std::fs::File;
-use yaml_rust::{YamlLoader, YamlEmitter};
+use yaml_rust::{YamlLoader};
 use urbit_http_api::ShipInterface;
 use std::{thread, time::Duration};
-use chrono::{Local, DateTime, TimeZone};
 use utils::{ts, add_planet_alert};
 use alerts::alerting_receiver;
 
@@ -29,7 +18,6 @@ mod utils;
 fn usage(){
   println!("USAGE: urbitmon [yaml config file]");
   println!("       e.g. urbitmon config.yaml");
-  
   std::process::exit(exitcode::OK);    
 }
 
@@ -114,7 +102,6 @@ fn main() {
             }
             // sleep for monitoring interval, reset alert
             alerting = false;
-            let seconds: u64 = monitoring_interval.try_into().unwrap();
             thread::sleep(Duration::from_secs(monitoring_interval.try_into().unwrap()));            
           }
         }

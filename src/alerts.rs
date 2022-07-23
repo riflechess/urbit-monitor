@@ -1,8 +1,5 @@
-use std::io::{stdout, Write, Read};
-use linked_hash_map::LinkedHashMap;
-use yaml_rust::{YamlLoader, YamlEmitter, Yaml};
+use yaml_rust::{Yaml};
 use super::utils::ts;
-use ureq::{post, Request};
 
 // receiver function to route alerts (when additional alerting added)
 pub fn alerting_receiver(planets: &str, alert_type: &str, config_yaml: &Yaml) {
@@ -20,10 +17,8 @@ fn text_alert(planets: &str, config_yaml: &Yaml){
   let alerting_token = config_yaml["token"].as_str().expect("Alerting token not defined");
   let phone_number = config_yaml["phone_number"].as_i64().expect("Alerting phone_number not defined");
   let alert_text = config_yaml["alert_text"].as_str().expect("Alerting alert_text not defined");
-
   let message_pre: String = alert_text.to_string();
   let message_post = message_pre + planets;
-
   println!("{} - {} {} {}{}", ts(), alerting_endpoint, phone_number, alert_text, planets);
   
 

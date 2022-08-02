@@ -107,6 +107,13 @@ fn main() {
             alerting = false;
             thread::sleep(Duration::from_secs(monitoring_interval.try_into().unwrap()));            
           }
+        }else{
+          if !service_mode {
+            println!("{} - Exiting urbitmon...", ts());
+            break;
+          }else{
+            thread::sleep(Duration::from_secs(monitoring_interval.try_into().unwrap()));   
+          }
         }
       }
     }else{

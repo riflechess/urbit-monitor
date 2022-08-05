@@ -57,6 +57,7 @@ fn main() {
 
       // text alerting vars
       let text_alerting_config = &cfg["text_alerting"];
+      let text_alerting_enabled: bool = ! text_alerting_config.is_badvalue();
 
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
@@ -84,14 +85,18 @@ fn main() {
         if alerting {
           // if service mode && counter = snooze
           if !service_mode {
-            alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+            if text_alerting_enabled {
+              alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+            }
             println!("{} - Exiting urbitmon...", ts());
             break;
           }else{
             // service mode alerting with snooze
             // first alert send decrement snooze count
             if alert_snooze_ct == alert_snooze {
-              alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+              if text_alerting_enabled{
+                alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+              }
               alert_snooze_ct = alert_snooze_ct - 1;
             // snooze ends, send alert, reset snooze
             }else if alert_snooze_ct == 1{

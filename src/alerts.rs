@@ -6,7 +6,8 @@ pub fn alerting_receiver(planets: &str, alert_type: &str, config_yaml: &Yaml) {
   println!("{} - Alert triggered - planets: {} type: {}", ts(), planets, alert_type);
   match alert_type {
     "text_alert" => text_alert(planets, config_yaml),
-    "email_alert" => println!("email alert!"),
+    "email_alert" => println!("email alert - coming soon?"),
+    "urbit_alert" => urbit_alert(planets, config_yaml),
     &_ => println!("Unknown alert type"),
   }
 }
@@ -35,4 +36,10 @@ fn text_alert(planets: &str, config_yaml: &Yaml){
   }else{
     println!("{} - Alert failed to send [ERROR]", ts());
   }
+}
+
+fn urbit_alert(planets: &str, config_yaml: &Yaml){
+  println!("urbit alert triggered");
+  println!("alerting planets {}", planets);
+  println!("config: {:?}", config_yaml);
 }

@@ -58,7 +58,9 @@ fn main() {
       // text alerting vars
       let text_alerting_config = &cfg["text_alerting"];
       let text_alerting_enabled: bool = ! text_alerting_config.is_badvalue();
-
+      // urbit alerting vars 
+      let urbit_alerting_config = &cfg["urbit_group_alert"];
+      let urbit_alerting_enabled: bool = ! urbit_alerting_config.is_badvalue();     
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
         // reset alerting planets 
@@ -81,6 +83,7 @@ fn main() {
             add_planet_alert(&mut alerting_planets, planet_name);
           }
         }
+        println!("alerting status: {}", alerting);
         // need to add the snooze functionality here && counter = snooze
         if alerting {
           // if service mode && counter = snooze
@@ -88,14 +91,22 @@ fn main() {
             if text_alerting_enabled {
               alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
             }
+            if urbit_alerting_enabled {
+              alerting_receiver(&alerting_planets, "urbit_alert", urbit_alerting_config); 
+            }
             println!("{} - Exiting urbitmon...", ts());
             break;
           }else{
+            println!("service mode...");
             // service mode alerting with snooze
             // first alert send decrement snooze count
             if alert_snooze_ct == alert_snooze {
+              println!("alert_snooze -> yes");
               if text_alerting_enabled{
                 alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+              }
+              if urbit_alerting_enabled {
+                alerting_receiver(&alerting_planets, "urbit_alert", urbit_alerting_config); 
               }
               alert_snooze_ct = alert_snooze_ct - 1;
             // snooze ends, send alert, reset snooze

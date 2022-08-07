@@ -7,7 +7,18 @@ text_alerting:
   endpoint: https://textbelt.com/text             # this shouldn't change just get an API key: https://textbelt.com/
   phone_number: 5555555555
   token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  alert_text: "fix your stinking planets: "
+  alert_text: "ALERT:Fix your stinking planets: "
+
+# Alert to an urbit group on a "reporter" ship. 
+# Watch for circular dependancies here (e.g. don't alert to ships you are monitoring!)
+urbit_group_alert:
+  reporter_ship_name: ~masnut-masnut-masnut-masnut
+  reporter_ship_address: https://moon.masnut.net:443
+  reporter_ship_code: masnut-masnut-masnut-masnut
+  # group to post alert - obtain group name (mychat-1313) via URL, e.g. .../chat/ship/~tictuc-lacdef-sitsev-lomrem/mychat-1313
+  reporter_group_name: mychat-1313
+  # custom alert text, after which failing planets will be listed
+  reporter_alert_text: "ALERT:Fix your stinking urbit planets: "
 
 # planet/star/galaxy endpoints to monitor
 endpoints:
@@ -15,9 +26,9 @@ endpoints:
     address: http://127.0.0.1:8080/
     code: lidlut-lidlut-lidlut-lidlut
   walbex-hasper-pollyt-hocnyx--macben-padper-lagdeb-marzod: 
-    address: https://my.palnet.net/
-    code: palnet-palnet-palnet-palnet
-  palnet-palnet: 
+    address: https://my.masnut.net/
+    code: masnut-masnut-masnut-masnut
+  masnut-masnut: 
     address: yyyyy.net
     code: ponbes-ponbes-ponbes-ponbes
   masnut-masnut: 

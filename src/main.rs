@@ -83,8 +83,6 @@ fn main() {
             add_planet_alert(&mut alerting_planets, planet_name);
           }
         }
-        println!("alerting status: {}", alerting);
-        // need to add the snooze functionality here && counter = snooze
         if alerting {
           // if service mode && counter = snooze
           if !service_mode {
@@ -97,11 +95,9 @@ fn main() {
             println!("{} - Exiting urbitmon...", ts());
             break;
           }else{
-            println!("service mode...");
             // service mode alerting with snooze
             // first alert send decrement snooze count
             if alert_snooze_ct == alert_snooze {
-              println!("alert_snooze -> yes");
               if text_alerting_enabled{
                 alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
               }

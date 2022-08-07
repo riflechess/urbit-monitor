@@ -1,5 +1,6 @@
 use yaml_rust::{Yaml};
 use super::utils::ts;
+use urbit_http_api::{ShipInterface, Message, Messaging};
 
 // receiver function to route alerts (when additional alerting added)
 pub fn alerting_receiver(planets: &str, alert_type: &str, config_yaml: &Yaml) {
@@ -38,8 +39,28 @@ fn text_alert(planets: &str, config_yaml: &Yaml){
   }
 }
 
+// post alert to reporter ship chat
 fn urbit_alert(planets: &str, config_yaml: &Yaml){
-  println!("urbit alert triggered");
-  println!("alerting planets {}", planets);
-  println!("config: {:?}", config_yaml);
+
+  // set vars for reporter(target) ship
+  let reporter_ship_address = config_yaml["reporter_ship_address"].as_str().expect("Reporter ship address not defined");
+  let reporter_ship_code = config_yaml["reporter_ship_code"].as_str().expect("Reporter ship code not defined");
+  let reporter_ship_name = config_yaml["reporter_ship_name"].as_str().expect("Reporter ship name not defined");
+  let reporter_group_name = config_yaml["reporter_group_name"].as_str().expect("Reporter ship group name not defined");
+  let reporter_alert_text = config_yaml["reporter_alert_text"].as_str().expect("Reporter alert text not defined");
+  
+  println!("{} - Sending alert to: {}, chat: {}", ts(), reporter_ship_name, reporter_group_name);
+
+  // build connection to reporting ship
+  let ship_interface = ShipInterface::new(reporter_ship_address, reporter_ship_code).unwrap();
+  let mut channel = ship_interface.create_channel().unwrap();
+
+  // build alert message, send alert
+  let alert = Message::new()
+  .add_text(reporter_alert_text)
+  .add_text(planets);
+  let _mess_res = channel
+    .chat()
+    .send_message(reporter_ship_name, reporter_group_name, &alert);
+  channel.delete_channel();
 }

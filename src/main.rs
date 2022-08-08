@@ -15,7 +15,7 @@ use alerts::alerting_receiver;
 mod alerts;
 mod utils;
 
-static VERSION: &str = "0.0.1";
+static VERSION: &str = "0.0.2";
 
 fn usage(){
   println!("USAGE: urbitmon [yaml config file]");
@@ -58,9 +58,12 @@ fn main() {
       // text alerting vars
       let text_alerting_config = &cfg["text_alerting"];
       let text_alerting_enabled: bool = ! text_alerting_config.is_badvalue();
+
       // urbit alerting vars 
       let urbit_alerting_config = &cfg["urbit_group_alert"];
       let urbit_alerting_enabled: bool = ! urbit_alerting_config.is_badvalue();     
+
+      // set endpoints to monitor
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
         // reset alerting planets 

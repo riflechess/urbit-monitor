@@ -24,11 +24,6 @@ fn usage(){
   std::process::exit(exitcode::OK);    
 }
 
-fn err(errtxt: &str){
-  println!("{} error has occurred.  Exiting.", errtxt);
-  std::process::exit(exitcode::DATAERR);
-}
-
 fn main() {
   let args: Vec<String> = env::args().collect();
   
@@ -132,7 +127,8 @@ fn main() {
         }
       }
     }else{
-      err("ERROR: Config file not found.");
+      println!("Config file {} not found. Exiting.", config_file);
+      std::process::exit(exitcode::DATAERR);
     }
   }
 }

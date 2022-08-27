@@ -79,6 +79,6 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
   2022-08-26T19:17:18 - Exiting urbitmon.
 ```
 #### SMS/Text Alert
-![](img/sms-alert.png?raw=true)
+![](img/sms-alert.jpg?raw=true)
 #### Urbit Group Alert
 ![](img/group-alert.png?raw=true)

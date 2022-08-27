@@ -1,11 +1,11 @@
-# urbitmon
+## urbitmon
 Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in the meantime. :-)
 
   - `urbitmon` is a simple rust-based program to monitor deployed urbit ships and alert via text or email upon issues.
   - Sends a text message using [textbelt](https://textbelt.com/). Textbelt has a free key for 1x day, otherwise is $5 for 200 texts.
   - Uses the [urbit rust API](https://github.com/robkorn/rust-urbit-http-api) developed by [dcspark](https://www.dcspark.io/) to test via ship login
 
-## Build instructions (*nix)
+### Build instructions (*nix)
   - Prerequistes: _git_
   - Install Rust (ensure the arch matches your target)
     ```shell
@@ -42,7 +42,7 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
     ```shell
     ./urbit-monitor config.yml
     ```
-## Config file
+### Config file
   - `monitoring`
     - `interval` - Check ships every X seconds. If set to `0`, urbitmon will run once and ignore `alert_snooze`.
     - `alert_snooze` - After alert, don't send alerts for X cycles.
@@ -52,12 +52,12 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
     - `address` accessable login endpoint, e.g. `https://sampal-palnet.net/`
     - `code` login `+code`
 
-## Further development
-  - Add support for alerting via urbit group message.
+### Further development
   - Use `alerting_receiver` to add support for other alerting methods.
+  - More intrusive tests beyond login(?)
 
-## Sample
-### Log
+### Sample
+#### Log
   ```shell
   % ./target/release/urbit-monitor config.yml
   2022-08-26T19:17:17 - Staring urbitmon...
@@ -78,7 +78,7 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
   2022-08-26T19:17:18 - Sending alert to: ~tictuc-lacdef-watsup-lomrem, chat: alerts-6170
   2022-08-26T19:17:18 - Exiting urbitmon.
 ```
-### SMS/Text Alert
+#### SMS/Text Alert
 ![](img/sms-alert.png?raw=true)
-### Urbit Group Alert
+#### Urbit Group Alert
 ![](img/group-alert.png?raw=true)

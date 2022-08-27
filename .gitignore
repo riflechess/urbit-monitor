@@ -5,3 +5,4 @@ config2.yml
 Cargo.lock
 urbitmon.log
 notes.txt
+.DS_Store

@@ -90,7 +90,7 @@ fn main() {
             if urbit_alerting_enabled {
               alerting_receiver(&alerting_planets, "urbit_alert", urbit_alerting_config); 
             }
-            println!("{} - Exiting urbitmon...", ts());
+            println!("{} - Exiting urbitmon.", ts());
             break;
           }else{
             // service mode alerting with snooze
@@ -119,7 +119,7 @@ fn main() {
           }
         }else{
           if !service_mode {
-            println!("{} - Exiting urbitmon...", ts());
+            println!("{} - Exiting urbitmon.", ts());
             break;
           }else{
             thread::sleep(Duration::from_secs(monitoring_interval.try_into().unwrap()));   

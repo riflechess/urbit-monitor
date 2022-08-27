@@ -13,7 +13,7 @@ curl -LJO https://github.com/riflechess/urbit-monitor/releases/download/v0.0.2-x
 tar -xzf x86_64-linux-urbit-monitor-v0.0.2.tar.gz
 ./urbit-monitor
 ```
-#### mac m1/
+#### mac m1
 ```shell
 curl -LJO https://github.com/riflechess/urbit-monitor/releases/download/v0.0.2-arm64-m1-urbit-monitor/arm64-m1-urbit-monitor-v0.0.2.tar.gz
 tar -xzf arm64-m1-urbit-monitor-v0.0.2.tar.gz
@@ -61,8 +61,20 @@ Build from source code using the following instructions
 ### Config file
   - `monitoring`
     - `interval` - Check ships every X seconds. If set to `0`, urbitmon will run once and ignore `alert_snooze`.
-    - `alert_snooze` - After alert, don't send alerts for X cycles.
+    - `alert_snooze`- After alert, don't send alerts for X cycles.
     - _example: interval: 300, alert_snooze: 6, will check status of planets every five minutes and upon alerting, halt futher alerts for 30 min.
+  - `text_alerting` - comment or completely remove section if you don't want text alerts
+    - `endpoint: https://textbelt.com/text` - don't change this.
+    - `phone_number` - phone number of person to receive sms/text if planet goes down (e.g. 5558675309)
+    - `token` - API token from textbelt. `textbelt` will give you 1 text/day, otherwise $5 for 200 texts.
+    - `alert_text` - alert text. failing planets will be listed after this. (e.g.`ALERT:Check planets: `)
+  - `urbit_group_alert` - comment or completely remove section if you don't want alerts to a urbit group
+    - `reporter_ship_name` - ship to login to and alert to a group (e.g. `~watsup-watsup-watsup-watsup`)
+    - `reporter_ship_address` - address of "reporter" ship (e.g. `https://moon.watsup.net:443`)
+    - `reporter_ship_code` - `+code` for login of reporter ship (e.g. `watsup-watsup-watsup-watsup`)
+    - `reporter_group_name` - chat name of to report to (grab from URL, e.g. `mychat-1313`)
+    - `reporter_alert_text` - alert text. failing planets will be listed after this. (e.g.`ALERT:Check planets: `)
+
   - `endpoints`
     - ship name (galaxy, star, planet, moon, comet)
     - `address` accessable login endpoint, e.g. `https://sampal-palnet.net/`

@@ -55,6 +55,7 @@ Health monitor for urbit ships, with sms and urbit group alerting.
 ### Further development
   - Use `alerting_receiver` to add support for other alerting methods.
   - More intrusive tests beyond login(?)
+  - More error handling
 
 ### Sample
 #### Log

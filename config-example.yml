@@ -6,7 +6,7 @@ monitoring:
 text_alerting:
   endpoint: https://textbelt.com/text             # this shouldn't change just get an API key: https://textbelt.com/
   phone_number: 5555555555
-  token: [API TOKEN PROVIDED BY TEXTBELT]
+  token: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   alert_text: "ALERT:Check the following planets: "
 
 # Alert to an urbit group on a "reporter" ship.

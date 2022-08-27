@@ -1,11 +1,11 @@
-# urbitmon
+## urbitmon
 Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in the meantime. :-)
 
   - `urbitmon` is a simple rust-based program to monitor deployed urbit ships and alert via text or email upon issues.
   - Sends a text message using [textbelt](https://textbelt.com/). Textbelt has a free key for 1x day, otherwise is $5 for 200 texts.
   - Uses the [urbit rust API](https://github.com/robkorn/rust-urbit-http-api) developed by [dcspark](https://www.dcspark.io/) to test via ship login
 
-## Build instructions (*nix)
+### Build instructions (*nix)
   - Prerequistes: _git_
   - Install Rust (ensure the arch matches your target)
     ```shell
@@ -42,7 +42,7 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
     ```shell
     ./urbit-monitor config.yml
     ```
-## Config file
+### Config file
   - `monitoring`
     - `interval` - Check ships every X seconds. If set to `0`, urbitmon will run once and ignore `alert_snooze`.
     - `alert_snooze` - After alert, don't send alerts for X cycles.
@@ -52,23 +52,33 @@ Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in t
     - `address` accessable login endpoint, e.g. `https://sampal-palnet.net/`
     - `code` login `+code`
 
-## Further development
-  - Add support for alerting via urbit group message.
+### Further development
   - Use `alerting_receiver` to add support for other alerting methods.
+  - More intrusive tests beyond login(?)
 
-## Sample log
-  ```
+### Sample
+#### Log
+  ```shell
   % ./target/release/urbit-monitor config.yml
-  2022-07-23T18:22:49 - Staring urbitmon...
-  2022-07-23T18:22:49 - Checking: zod (http://127.0.0.1:8080/)
-  2022-07-23T18:22:50 - zod [OK]
-  2022-07-23T18:22:50 - Checking: walbex-hasper-pollyt-hocnyx--macben-padper-lagdeb-marzod (https://mark.sitsev.net/)
-  2022-07-23T18:22:50 - walbex-hasper-pollyt-hocnyx--macben-padper-lagdeb-marzod [OK]
-  2022-07-23T18:22:50 - Checking: palnet-palnet (yyyyy.net)
-  2022-07-23T18:22:50 - palnet-palnet [ERROR] Login failed.
-  2022-07-23T18:22:50 - Checking: pophat-buntuk (yyyyy.net)
-  2022-07-23T18:22:50 - masnut-masnut [ERROR] Login failed.
-  2022-07-23T18:22:50 - Alert triggered - planets: palnet-palnet masnut-masnut  type: text_alert
-  2022-07-23T18:22:50 - https://textbelt.com/text 5555555555 fix your stinking planets: palnet-palnet masnut-masnut
-  2022-07-23T18:22:51 - Alert sent [OK]
-  ```
+  2022-08-26T19:17:17 - Staring urbitmon...
+  2022-08-26T19:17:17 - Checking: zod (http://127.0.0.1:8080/)
+  2022-08-26T19:17:17 - zod [ERROR] Login failed.
+  2022-08-26T19:17:17 - Checking: walbex-hasper-pollyt-hocnyx--macben-padper-lagdeb-marzod (https://urbit.watsup.net/)
+  2022-08-26T19:17:17 - walbex-hasper-pollyt-hocnyx--macben-padper-lagdeb-marzod [OK]
+  2022-08-26T19:17:17 - Checking: turnip-hodler (https://turnip-hodler.watsup.net/)
+  2022-08-26T19:17:17 - turnip-hodler [OK]
+  2022-08-26T19:17:17 - Checking: tictuc-lacdef-watsup-lomrem (https://moon.watsup.net/)
+  2022-08-26T19:17:17 - tictuc-lacdef-watsup-lomrem [OK]
+  2022-08-26T19:17:17 - Checking: pophat-buntuk (yyyyy.net)
+  2022-08-26T19:17:17 - pophat-buntuk [ERROR] Login failed.
+  2022-08-26T19:17:17 - Alert triggered - planets: zod pophat-buntuk  type: text_alert
+  2022-08-26T19:17:17 - https://textbelt.com/text 5558675309 fix your stinking planets: zod pophat-buntuk
+  2022-08-26T19:17:18 - Alert sent [OK]
+  2022-08-26T19:17:18 - Alert triggered - planets: zod pophat-buntuk  type: urbit_alert
+  2022-08-26T19:17:18 - Sending alert to: ~tictuc-lacdef-watsup-lomrem, chat: alerts-6170
+  2022-08-26T19:17:18 - Exiting urbitmon.
+```
+#### SMS/Text Alert
+![](img/sms-alert.jpg?raw=true)
+#### Urbit Group Alert
+![](img/group-alert.png?raw=true)

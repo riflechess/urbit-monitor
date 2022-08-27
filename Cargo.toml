@@ -1,12 +1,12 @@
 [package]
 name = "urbit-monitor"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["~Sitsev-Lomrem <marknoexec@gmail.com>"]
 edition = "2021"
 description = "Performs simple health monitors on list of urbit ships."
 repository = "https://github.com/riflechess/urbit-monitor"
 license = "MIT"
-keywords = ["urbit", "monitor", "health check"]
+keywords = ["urbit", "monitor", "health check", "urbitmon"]
 
 [dependencies]
 urbit-http-api    = "0.7.3"

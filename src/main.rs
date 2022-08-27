@@ -15,18 +15,13 @@ use alerts::alerting_receiver;
 mod alerts;
 mod utils;
 
-static VERSION: &str = "0.0.1";
+static VERSION: &str = "0.0.2";
 
 fn usage(){
   println!("USAGE: urbitmon [yaml config file]");
   println!("       e.g. urbitmon config.yaml");
   println!("       urbitmon: {}", VERSION);
   std::process::exit(exitcode::OK);    
-}
-
-fn err(errtxt: &str){
-  println!("{} error has occurred.  Exiting.", errtxt);
-  std::process::exit(exitcode::DATAERR);
 }
 
 fn main() {
@@ -59,6 +54,11 @@ fn main() {
       let text_alerting_config = &cfg["text_alerting"];
       let text_alerting_enabled: bool = ! text_alerting_config.is_badvalue();
 
+      // urbit alerting vars 
+      let urbit_alerting_config = &cfg["urbit_group_alert"];
+      let urbit_alerting_enabled: bool = ! urbit_alerting_config.is_badvalue();     
+
+      // set endpoints to monitor
       let planets = cfg["endpoints"].as_hash().unwrap();
       loop{
         // reset alerting planets 
@@ -81,14 +81,16 @@ fn main() {
             add_planet_alert(&mut alerting_planets, planet_name);
           }
         }
-        // need to add the snooze functionality here && counter = snooze
         if alerting {
           // if service mode && counter = snooze
           if !service_mode {
             if text_alerting_enabled {
               alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
             }
-            println!("{} - Exiting urbitmon...", ts());
+            if urbit_alerting_enabled {
+              alerting_receiver(&alerting_planets, "urbit_alert", urbit_alerting_config); 
+            }
+            println!("{} - Exiting urbitmon.", ts());
             break;
           }else{
             // service mode alerting with snooze
@@ -96,6 +98,9 @@ fn main() {
             if alert_snooze_ct == alert_snooze {
               if text_alerting_enabled{
                 alerting_receiver(&alerting_planets, "text_alert", text_alerting_config);
+              }
+              if urbit_alerting_enabled {
+                alerting_receiver(&alerting_planets, "urbit_alert", urbit_alerting_config); 
               }
               alert_snooze_ct = alert_snooze_ct - 1;
             // snooze ends, send alert, reset snooze
@@ -114,7 +119,7 @@ fn main() {
           }
         }else{
           if !service_mode {
-            println!("{} - Exiting urbitmon...", ts());
+            println!("{} - Exiting urbitmon.", ts());
             break;
           }else{
             thread::sleep(Duration::from_secs(monitoring_interval.try_into().unwrap()));   
@@ -122,7 +127,8 @@ fn main() {
         }
       }
     }else{
-      err("ERROR: Config file not found.");
+      println!("Config file {} not found. Exiting.", config_file);
+      std::process::exit(exitcode::DATAERR);
     }
   }
 }

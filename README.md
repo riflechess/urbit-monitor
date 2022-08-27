@@ -5,7 +5,23 @@ Health monitor for urbit ships, with sms and urbit group alerting.
   - Sends a text message using [textbelt](https://textbelt.com/). Textbelt has a free key for 1x day, otherwise is $5 for 200 texts.
   - Uses the [urbit rust API](https://github.com/robkorn/rust-urbit-http-api) developed by [dcspark](https://www.dcspark.io/) to test via ship login
 
+### Download instructions (*nix)
+Download and run release binaries using the following instructions.
+#### linux
+```shell
+curl -LJO https://github.com/riflechess/urbit-monitor/releases/download/v0.0.2-x86_64-linux-urbit-monitor/x86_64-linux-urbit-monitor-v0.0.2.tar.gz
+tar -xzf x86_64-linux-urbit-monitor-v0.0.2.tar.gz
+./urbit-monitor
+```
+#### mac m1/
+```shell
+curl -LJO https://github.com/riflechess/urbit-monitor/releases/download/v0.0.2-arm64-m1-urbit-monitor/arm64-m1-urbit-monitor-v0.0.2.tar.gz
+tar -xzf arm64-m1-urbit-monitor-v0.0.2.tar.gz
+./urbit-monitor
+```
+
 ### Build instructions (*nix)
+Build from source code using the following instructions
   - Prerequistes: _git_
   - Install Rust (ensure the arch matches your target)
     ```shell

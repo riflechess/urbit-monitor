@@ -1,5 +1,5 @@
 ## urbitmon
-Health monitor for urbit ships. I'm sure there will be a hoon app soon, but in the meantime. :-)
+Health monitor for urbit ships, with sms and urbit group alerting.
 
   - `urbitmon` is a simple rust-based program to monitor deployed urbit ships and alert via text or email upon issues.
   - Sends a text message using [textbelt](https://textbelt.com/). Textbelt has a free key for 1x day, otherwise is $5 for 200 texts.

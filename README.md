@@ -88,6 +88,16 @@ Build from source code using the following instructions
   - More error handling
 
 ### Sample
+#### Running
+Run the monitor in the background and have it write to a log:
+```shell
+./urbit-monitor config.yml >> urbitmon.log &
+```
+Stop the monitor:
+```shell
+pkill urbit-monitor
+```
+
 #### Log
   ```shell
   % ./target/release/urbit-monitor config.yml

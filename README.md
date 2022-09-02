@@ -12,12 +12,14 @@ Download and run release binaries using the following instructions.
 curl -LJO https://github.com/riflechess/urbit-monitor/releases/download/v0.0.2-x86_64-linux-urbit-monitor/x86_64-linux-urbit-monitor-v0.0.2.tar.gz
 tar -xzf x86_64-linux-urbit-monitor-v0.0.2.tar.gz
 ./urbit-monitor
+
 ```
 #### mac m1
 ```shell
 curl -LJO https://github.com/riflechess/urbit-monitor/releases/download/v0.0.2-arm64-m1-urbit-monitor/arm64-m1-urbit-monitor-v0.0.2.tgz
 tar -xzf arm64-m1-urbit-monitor-v0.0.2.tgz
 ./urbit-monitor
+
 ```
 
 ### Build instructions (*nix)

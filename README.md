@@ -1,7 +1,7 @@
-## urbitmon
+## urbit-monitor
 Health monitor for urbit ships, with sms and urbit group alerting.
 
-  - `urbitmon` is a simple rust-based program to monitor deployed urbit ships and alert via text or email upon issues.
+  - `urbit-monitor` is a simple rust-based program to monitor deployed urbit ships and alert via text or email upon issues.
   - Sends a text message using [textbelt](https://textbelt.com/). Textbelt has a free key for 1x day, otherwise is $5 for 200 texts.
   - Uses the [urbit rust API](https://github.com/robkorn/rust-urbit-http-api) developed by [dcspark](https://www.dcspark.io/) to test via ship login
 
